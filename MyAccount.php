@@ -8,6 +8,76 @@
     <link rel="stylesheet" type="text/css" href="Style.css">
     <title>Social Book</title>
     <link href="img/titleLogo.png" rel="shortcut icon" />
+
+    <style>
+
+.account-info {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 400px;
+    margin: 20px auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.account-info img.profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007BFF;
+    margin-bottom: 15px;
+}
+
+.account-info p {
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Upload Form */
+.accForm {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.accForm label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.accForm input[type="file"] {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.accForm input[type="submit"] {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.accForm input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+    </style>
 </head>
 <body>
     
@@ -35,29 +105,44 @@
     </div>
 
     <?php
-  
-		$con = mysqli_connect("localhost","root","","socialbook","3307");
-		if(!$con)
-		{	
-			die("Cannot connect to DB server");		
-		}
-		$sql ="SELECT * FROM `tbluser` WHERE `email` = '".$_SESSION["userName"]."'";	
-					
-		$result = mysqli_query($con,$sql);
-			
-		if(mysqli_num_rows($result)> 0)
-	     {
-			while($row = mysqli_fetch_assoc($result))
-			{
+        $con = mysqli_connect("localhost","root","","socialbook","3307");
+        if(!$con) {	
+            die("Cannot connect to DB server");		
+        }
+
+        if(isset($_POST['upload'])) {
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["profilePicture"]["name"]);
+            move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $target_file);
+
+            $sql = "UPDATE `tbluser` SET `imagePath`='".$target_file."' WHERE `email` = '".$_SESSION["userName"]."'";
+            mysqli_query($con, $sql);
+        }
+
+        $sql ="SELECT * FROM `tbluser` WHERE `email` = '".$_SESSION["userName"]."'";	
+        $result = mysqli_query($con,$sql);
+
+        if(mysqli_num_rows($result) > 0) {
+            while($row = mysqli_fetch_assoc($result)) {
     ?>
-  <p><?php echo $row["name"]; ?></p>
-  <p><?php echo $row["contactNumber"]; ?></p>
-  <p><?php echo $row["email"]; ?></p>
-        <?php
+    <div class="account-info">
+        <img src="<?php echo $row['imagePath'] ? $row['imagePath'] : 'img/default-avatar.png'; ?>" alt="Profile Picture" class="profile-picture">
+        <p>Name: <?php echo $row["name"]; ?></p>
+        <p>Contact: <?php echo $row["contactNumber"]; ?></p>
+        <p>Email: <?php echo $row["email"]; ?></p>
+    </div>
+    
+    <form action="MyAccount.php" method="post" enctype="multipart/form-data" class="accForm">
+        <label for="profilePicture">Upload Profile Picture:</label>
+        <input type="file" name="profilePicture" id="profilePicture">
+        <input type="submit" name="upload" value="Upload" >
+    </form>
+
+    <?php
             }
         }
-    mysqli_close($con);
-        ?>
+        mysqli_close($con);
+    ?>
 
 
       <!--Footer-->

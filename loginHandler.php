@@ -25,6 +25,10 @@ $result = mysqli_query($con, $sql);
 if (mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
     $_SESSION["userName"] = $userName;
+        
+    // Set isAdmin session variable
+    $_SESSION["isAdmin"] = ($row['isAdmin'] == 1);
+
     
     // Check if the user is an admin
     if ($row['isAdmin'] == 1) {

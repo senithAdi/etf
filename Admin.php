@@ -1,13 +1,16 @@
 <?php
+
+include_once 'session.php';
+
 // Database connection
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "socialbook";
-// $port = 3307;
+$port = 3307;
 
-// $conn = new mysqli($servername, $username, $password, $dbname, $port);
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
+// $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -130,10 +133,42 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="Style.css">
-    <title>Social Book - Product Management</title>
+    <title>Product Management</title>
     <link href="img/titleLogo.png" rel="shortcut icon" />
     <style>
-        .product-form {
+        body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: 2.5rem;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+a {
+    text-decoration: none;
+    color: #2980b9;
+}
+
+a:hover {
+    color: #1abc9c;
+}
+
+        /* .product-form {
             margin-bottom: 20px;
         }
         .product-list {
@@ -144,7 +179,101 @@ $result = $conn->query($sql);
             margin: 10px;
             padding: 10px;
             border: 1px solid #ddd;
-        }
+        } */
+        .product-form {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-form select, 
+.product-form input[type="text"],
+.product-form input[type="number"],
+.product-form input[type="file"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.product-form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #2C3E50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.product-form input[type="submit"]:hover {
+    opacity: 0.7;
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.product-item {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.product-item img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.product-item h3 {
+    margin: 10px 0;
+    font-size: 1.5rem;
+    color: #2c3e50;
+}
+
+.product-item p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #7f8c8d;
+}
+
+.product-item form {
+    margin-top: 10px;
+}
+
+.product-item input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #503E2C;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.product-item input[type="submit"]:hover {
+    opacity: 0.7;
+}
+
+.product-item input[type="file"] {
+    display: none;
+}
+
     </style>
 </head>
 <body>
@@ -207,7 +336,7 @@ $result = $conn->query($sql);
                     echo "<h3>" . $row["book_name"] . "</h3>";
                     echo "<p>Category: " . $row["category"] . "</p>";
                     echo "<p>Author: " . $row["authors_name"] . "</p>";
-                    echo "<p>Price: $" . $row["price"] . "</p>";
+                    echo "<p>Price: Rs. " . $row["price"] . "</p>";
                     
                     // Update Form
                     echo "<form method='POST' action='' enctype='multipart/form-data'>";
@@ -241,9 +370,57 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-    <!--Footer-->
+         <!--Footer-->
     <footer class="footer">
-        <!-- Footer content remains unchanged -->
+        <div class="container-footer">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>Menu</h4>
+                    <ul>
+                        <li><a href="index.html">home</a></li>
+                        <li><a href="Books.html">books</a></li>
+                        <li><a href="About.html">about</a></li>
+                        <li><a href="Cart.html">cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>get help</h4>
+                    <ul>
+                        <li><a href="FAQ.html">FAQ</a></li>
+                        <li><a href="Cart.html">shipping</a></li>
+                        <li><a href="Cart.html">returns</a></li>
+                        <li><a href="Cart.html">order status</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Book Type</h4>
+                    <ul>
+                        <li><a href="Books.html#Fictions">Fictions</a></li>
+                        <li><a href="Books.html#Novels">Novels</a></li>
+                        <li><a href="Books.html#Translations">Translations</a></li>
+                        <li><a href="Books.html#History">History</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>follow us</h4>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=100077104396165"><img src="img/Facebook.png"
+                                height="46px" width="46px"
+                                style="display:flex; margin-left: -3.5px; margin-top: -3px;"></a>
+
+                        <a href="https://www.youtube.com/"><img src="img/utube.png" height="33px" width="33px"
+                                style="display:flex; margin-left: 3px; margin-top: 3px;"></a>
+
+                        <a href="https://www.instagram.com/senith.adithya/"><img src="img/insta.png" height="30px"
+                                width="30px" style="display:flex; margin-left: 5px; margin-top: 5px;"></a>
+
+                        <a href="https://www.blogger.com/blog/posts/6848685841490317236?bpli=1&pli=1"><img
+                                src="img/blogger.png" height="30px" width="30px"
+                                style="display:flex; margin-left: 5px; margin-top: 5px;"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
 
 </body>
