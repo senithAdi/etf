@@ -2,21 +2,14 @@
 
 include_once 'session.php';
 
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "socialbook";
-$port = 3307;
+$conn = new mysqli("localhost", "root", "", "socialbook", 3307);
 
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-// $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Function to handle image upload
+// Image upload
 function uploadImage($file) {
     $target_dir = "adminImage/";
     if (!file_exists($target_dir)) {
@@ -25,18 +18,18 @@ function uploadImage($file) {
     $target_file = $target_dir . basename($file["name"]);
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     
-    // Check if image file is an actual image or fake image
+    
     $check = getimagesize($file["tmp_name"]);
     if($check === false) {
         return false;
     }
     
-    // Check file size (limit to 5MB)
+    
     if ($file["size"] > 5000000) {
         return false;
     }
     
-    // Allow certain file formats
+    
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
         return false;
     }
@@ -48,9 +41,10 @@ function uploadImage($file) {
     }
 }
 
-// Handle form submissions
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['submit'])) {
+
         // Add new product
         $category = $_POST['category'];
         $book_name = $_POST['book_name'];
@@ -73,7 +67,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $stmt->close();
     } elseif (isset($_POST['update'])) {
-        // Update existing product
+
+        // Update product
         $product_id = $_POST['product_id'];
         $category = $_POST['category'];
         $book_name = $_POST['book_name'];
@@ -96,10 +91,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $stmt->close();
     } elseif (isset($_POST['delete'])) {
+
         // Delete product
         $product_id = $_POST['product_id'];
 
-        // First, get the image URL to delete the file
         $sql = "SELECT image_url FROM product WHERE product_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $product_id);
@@ -113,7 +108,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $stmt->close();
 
-        // Now delete the product from the database
         $sql = "DELETE FROM product WHERE product_id=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $product_id);
@@ -168,18 +162,6 @@ a:hover {
     color: #1abc9c;
 }
 
-        /* .product-form {
-            margin-bottom: 20px;
-        }
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .product-item {
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-        } */
         .product-form {
     background-color: #ecf0f1;
     padding: 20px;
@@ -299,7 +281,6 @@ a:hover {
         </nav>
     </div>
 
-    <!--Main Content-->
     <div class="content">
         <h1>Product Management</h1>
 

@@ -11,12 +11,13 @@
 
 <body onload="doShowAll()">
 
-    <!--JS Functions to add book to cart through other web pages and Cart web page itself-->
+    
     <script>
 
         // Function to save item to localStorage
         function SaveItem(name, quantity, price) {
             if (!name || !quantity || !price) {
+                
                 // Get values from the form if not provided
                 name = document.forms.ShoppingList.name.value;
                 quantity = document.forms.ShoppingList.quantity.value;

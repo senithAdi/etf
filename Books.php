@@ -1,23 +1,15 @@
 <?php
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "socialbook";
-$port = 3307;
 
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-// $conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli("localhost", "root", "", "socialbook", 3307);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch all products from the database, ordered by category
 $sql = "SELECT * FROM product ORDER BY category";
 $result = $conn->query($sql);
 
-// Function to generate book cards
+// Generate book cards
 function generateBookCards($books) {
     $output = '';
     foreach ($books as $book) {
@@ -93,12 +85,12 @@ if ($result->num_rows > 0) {
         </div>
     </section>
 
-    <!-- Main Content -->
+
     <div class="book-cards-container">
     <?php
     if (!empty($books_by_category)) {
         foreach ($books_by_category as $category => $books) {
-            // Add an ID to each category section
+            
             $category_id = strtolower(str_replace(' ', '-', $category));
             echo "<div id='" . $category_id . "' class='heading'>";
             echo "<h1 style='margin-bottom:10px;'>" . htmlspecialchars($category) . "</h1>";

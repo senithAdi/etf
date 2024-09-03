@@ -107,7 +107,7 @@
     <section class="intro-section-Form">
         <div class="overlay-Form">
 
-            <h1 class="formH">Socialbook LoginForm</h1>
+            <h1 class="formH" style="margin-left:250px;">Socialbook LoginForm</h1>
 
             <div class="container-Form" id="container">
                 <div class="form-container sign-up">
